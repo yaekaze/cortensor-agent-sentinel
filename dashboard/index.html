@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CorSentinel — Cortensor PoI/PoUW Verification & OpenMinion 0.1.13 Operator Console</title>
+  <style>
+    :root {
+      --bg: #080c14;
+      --panel: #0f1624;
+      --panel-alt: #131d31;
+      --border: #1e2d4a;
+      --cyan: #06b6d4;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(circle at 15% 0%, #111c35 0%, var(--bg) 60%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 28px 36px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 18px;
+      margin-bottom: 24px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #06b6d4 0%, #6366f1 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      color: #fff;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
+    }
+    .brand h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .brand p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .pills {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--panel-alt);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .pill.cyan { border-color: rgba(6,182,212,0.5); color: #67e8f9; background: rgba(6,182,212,0.1); }
+    .pill.emerald { border-color: rgba(16,185,129,0.5); color: #6ee7b7; background: rgba(16,185,129,0.1); }
+    .pill.indigo { border-color: rgba(99,102,241,0.5); color: #a5b4fc; background: rgba(99,102,241,0.12); }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .kpi-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .kpi-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding-bottom: 12px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .badge.ok { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.35); }
+    .badge.fault { background: rgba(244,63,94,0.15); color: #fb7185; border: 1px solid rgba(244,63,94,0.35); }
+    .badge.warn { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.35); }
+
+    .run-box {
+      background: var(--panel-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .run-box h4 {
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .run-box p {
+      font-size: 12.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+    .mono {
+      font-family: 'JetBrains Mono', 'Fira Code', monospace;
+      font-size: 11.5px;
+      color: #67e8f9;
+    }
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo-badge">CS</div>
+      <div>
+        <h1>CorSentinel — Cortensor PoI/PoUW Verification &amp; Airlock Agent</h1>
+        <p>Built on Official OpenMinion 0.1.13 Python SDK · Cortensor Hackathon #5 (Mainnet Full Alpha Builder Round)</p>
+      </div>
+    </div>
+    <div class="pills">
+      <span class="pill cyan">OpenMinion SDK v0.1.13</span>
+      <span class="pill emerald">10/10 Building Blocks Exercised</span>
+      <span class="pill indigo">3 Upstream SDK Bugs + Patch Diffs</span>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Session #42 PoI Quorum</div>
+      <div class="kpi-value" style="color:#34d399;">0.8930</div>
+      <div class="kpi-sub">2 Verified Miners · 1 Byzantine Fault Quarantined</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Session #108 Portal Quorum</div>
+      <div class="kpi-value" style="color:#67e8f9;">1.0000 PoUW</div>
+      <div class="kpi-sub">3/3 Verified Miners · 0 False Positives (276ms)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Delegation &amp; Airlock</div>
+      <div class="kpi-value">subagent + Handoff</div>
+      <div class="kpi-sub">poi-forensics-verifier + approval_callback Gate</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Automated Pytest Suite</div>
+      <div class="kpi-value" style="color:#a5b4fc;">7 / 7 Passed</div>
+      <div class="kpi-sub">Includes 3 Stock OpenMinion 0.1.13 Bug Repros</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Cortensor Session #42 — Redundant Miner PoI &amp; PoUW Telemetry</span>
+        <span class="mono">evidence_sha256: c508827f8d707896...51d24a11c</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Miner Node ID</th>
+            <th>Model</th>
+            <th>Latency / SLA</th>
+            <th>PoI Cosine Sim</th>
+            <th>PoUW Score</th>
+            <th>EMA Trust</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">miner-alpha-01</td>
+            <td>gpt-oss-20b</td>
+            <td>385ms (Pass)</td>
+            <td>0.8895</td>
+            <td>1.0000</td>
+            <td>90.0 → 90.98</td>
+            <td><span class="badge ok">VERIFIED</span></td>
+          </tr>
+          <tr>
+            <td class="mono">miner-beta-02</td>
+            <td>gpt-oss-20b</td>
+            <td>412ms (Pass)</td>
+            <td>0.8965</td>
+            <td>1.0000</td>
+            <td>90.0 → 91.08</td>
+            <td><span class="badge ok">VERIFIED</span></td>
+          </tr>
+          <tr>
+            <td class="mono">miner-gamma-03</td>
+            <td>gpt-oss-20b-q2-drift</td>
+            <td style="color:#fb7185;">3190ms (SLA Breach)</td>
+            <td style="color:#fb7185;">0.4941 (Drift 0.5059)</td>
+            <td style="color:#fb7185;">0.3000</td>
+            <td style="color:#fb7185;">90.0 → 55.15</td>
+            <td><span class="badge fault">BYZANTINE_FAULT</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top: 18px;" class="run-box">
+        <h4>
+          <span>Delegated OpenMinion Subagent Forensics (<span class="mono">subagent: poi-forensics-verifier</span>)</span>
+          <span class="badge warn">Bounded Context · 120s Timeout</span>
+        </h4>
+        <p>
+          Forensics confirmed on <span class="mono">miner-gamma-03</span>: (1) quantized weight drift produced an invalid 240/10 COR split instead of 212.5/25.0/12.5 COR; (2) unsafe Solidity <span class="mono">tx.origin == owner</span> authorization pattern injected; (3) off-chain S3 URN remained in <span class="mono">blob-ref-pending-timeout</span> state past 3190ms SLA.
+        </p>
+      </div>
+
+      <div class="run-box" style="margin-bottom:0;">
+        <h4>
+          <span>Peer Agent Handoff (<span class="mono">Handoff: transfer_to_remediation_advisor</span>)</span>
+          <span class="badge ok">Session Continuity Verified</span>
+        </h4>
+        <p>
+          Peer Remediation Advisor recommendation: quarantine divergent <span class="mono">miner-gamma-03</span> behind human operator approval (<span class="mono">@tool(dangerous=True)</span>) and fail over session 42 to backup ephemeral miner pool while preserving verified quorum nodes <span class="mono">miner-alpha-01</span> and <span class="mono">miner-beta-02</span>.
+        </p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Live OpenMinion 0.1.13 Multi-Turn Execution Runs</span>
+        <span class="mono">CortensorProvider + APIRuntime</span>
+      </div>
+
+      <div class="run-box">
+        <h4>
+          <span>Run #1: Session #42 (Operator Approves Quarantine)</span>
+          <span class="badge ok">DEGRADED_REMEDIATED</span>
+        </h4>
+        <p class="mono">run_id: 4742502b74de44e68b783bf53a6ca891 · duration: 940ms · tool_calls: 4</p>
+        <p><strong>Airlock:</strong> <span class="mono">queue_miner_remediation=APPROVED</span> → Proposal <span class="mono">prop-42-d12f89da</span> (<span class="mono">executed=True</span>).</p>
+        <p><strong>Delta:</strong> Initial baseline audit recorded for session 42 (quorum=0.8930, divergent=['miner-gamma-03']).</p>
+      </div>
+
+      <div class="run-box">
+        <h4>
+          <span>Run #2: Session #42 Repeat (Operator Rejects Airlock)</span>
+          <span class="badge warn">CRITICAL_QUARANTINE_PENDING</span>
+        </h4>
+        <p class="mono">run_id: denied-fe583c2a05bf4c93 · state: completed_approval_denied</p>
+        <p><strong>Airlock:</strong> <span class="mono">queue_miner_remediation=REJECTED</span> → Proposal <span class="mono">prop-42-5aa4b737</span> (<span class="mono">executed=False</span>, runtime halted mutation).</p>
+        <p><strong>Since Last Run Delta:</strong> Run #2 on session 42 vs Run #1: PoI quorum delta +0.0000 (0.8930 → 0.8930); newly flagged=none, resolved=none.</p>
+      </div>
+
+      <div class="run-box" style="margin-bottom:0;">
+        <h4>
+          <span>Run #3: Session #108 (Cortensor Portal Healthy Quorum)</span>
+          <span class="badge ok">HEALTHY_QUORUM</span>
+        </h4>
+        <p class="mono">run_id: 0fb74a0c76d64de38adf78ea69b70f0f · duration: 276ms · model: oss-20b</p>
+        <p><strong>Result:</strong> 3/3 miners verified (<span class="mono">poi_quorum=0.8433</span>, <span class="mono">pouw_mean=1.0000</span>). Zero false-positive escalations.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Discovered OpenMinion 0.1.13 Bugs &amp; Ready-to-Merge Upstream Patches</span>
+        <span class="badge cyan" style="background:rgba(6,182,212,0.15);color:#67e8f9;border:1px solid rgba(6,182,212,0.35);">Bonus Criteria</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Bug ID</th>
+            <th>Module (`openminion 0.1.13`)</th>
+            <th>Root Cause &amp; Patch File</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">OM-0.1.13-BUG-1</td>
+            <td class="mono">providers/cortensor/adapter.py:480</td>
+            <td><code>_parse_response_payload</code> hardcodes <code>fallback_enabled=False</code> and line 301 deletes <code>tool_call_strategy</code>, dropping all fallback tool calls in Cortensor Router completion mode. (<span class="mono">upstream/0001-*.patch</span>)</td>
+          </tr>
+          <tr>
+            <td class="mono">OM-0.1.13-BUG-2</td>
+            <td class="mono">api/handoff.py:278</td>
+            <td><code>subagent(parent, tools=[decorated_fn])</code> passes callable functions into <code>SubagentRunContext.tool_allowlist</code>, crashing <code>as_inbound_metadata()</code> with <code>TypeError</code>. (<span class="mono">upstream/0002-*.patch</span>)</td>
+          </tr>
+          <tr>
+            <td class="mono">OM-0.1.13-BUG-3</td>
+            <td class="mono">providers/cortensor/adapter.py:778</td>
+            <td><code>_looks_like_offchain_result_pending</code> matches <code>"urn:blob"</code> + <code>"s3"</code> across the full serialized JSON even when valid assistant text/tool calls exist, causing a 6× false retry loop. (<span class="mono">upstream/0003-*.patch</span>)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">All 10 OpenMinion 0.1.13 Building Blocks Verified</span>
+        <span class="mono">BUILDING_BLOCKS_TESTED.md</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Building Block</th>
+            <th>SDK Surface Used in CorSentinel</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Execution &amp; 2. Models</strong></td>
+            <td><code>Agent.run_stream</code>, <code>APIRuntime</code>, <code>cortensor-router</code> &amp; <code>cortensor-portal</code></td>
+            <td><span class="badge ok">VERIFIED</span></td>
+          </tr>
+          <tr>
+            <td><strong>3. Tools &amp; 4. Permissions</strong></td>
+            <td><code>@tool(min_scope="READ_ONLY")</code>, <code>@tool(dangerous=True)</code>, <code>approval_callback</code></td>
+            <td><span class="badge ok">VERIFIED</span></td>
+          </tr>
+          <tr>
+            <td><strong>5. Sessions &amp; 6. Memory</strong></td>
+            <td>Durable SQLite <code>session_id</code> continuity, <code>MemoryBundle.to_json / from_json</code></td>
+            <td><span class="badge ok">VERIFIED</span></td>
+          </tr>
+          <tr>
+            <td><strong>7. Skills &amp; 8. Tasks</strong></td>
+            <td><code>skills/cortensor-poi-audit/SKILL.md</code>, <code>forced_tools</code>, Pydantic <code>output_type</code></td>
+            <td><span class="badge ok">VERIFIED</span></td>
+          </tr>
+          <tr>
+            <td><strong>9. Delegation &amp; 10. Diagnostics</strong></td>
+            <td><code>subagent()</code> + <code>Handoff</code>, <code>runtime_posture()</code>, <code>capability_report()</code>, <code>stats</code></td>
+            <td><span class="badge ok">VERIFIED</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

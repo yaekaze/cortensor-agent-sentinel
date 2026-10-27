@@ -1,0 +1,42 @@
+--- a/openminion/modules/llm/providers/cortensor/adapter.py
++++ b/openminion/modules/llm/providers/cortensor/adapter.py
+@@ -298,7 +298,6 @@ class CortensorProvider:
+         tool_call_strategy: str,
+         base_url: str,
+     ) -> dict[str, Any]:
+-        del tool_call_strategy
+         candidates = self._resolve_session_candidates(request=request, config=config)
+         if not candidates:
+             raise LLMCtlError(
+@@ -327,6 +326,7 @@ class CortensorProvider:
+                     config=config,
+                     model=model,
+                     session_id=session_id,
++                    tool_call_strategy=tool_call_strategy,
+                 )
+                 timeout_seconds = self._resolve_transport_timeout_seconds(
+                     api_mode="cortensor_completion",
+@@ -477,7 +477,9 @@ class CortensorProvider:
+             provider_name=self.name,
+             model_name=str(response_payload.get("model") or fallback_model),
+             allowed_tool_names=allowed_tool_names if request.tools else None,
+-            fallback_enabled=False,
++            fallback_enabled=bool(
++                request.tools and supports_fallback_tool_calling(tool_call_strategy)
++            ),
+             parser_plugin_selection=behavior_profile.parser_plugin_selection,
+             fallback_parser_policy=behavior_profile.fallback_parser_policy,
+         )
+@@ -498,7 +500,11 @@ class CortensorProvider:
+             )
+ 
+         return {
+-            "text": text.strip(),
++            "text": (
++                ""
++                if (tool_calls and tool_call_resolution.selected_source != "native")
++                else text.strip()
++            ),
+             "tool_calls": tool_calls,
+             "tool_call_normalization": tool_call_resolution.as_metadata(),
+             "usage": _usage_from_openai_like(response_payload.get("usage")),

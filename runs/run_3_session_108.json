@@ -1,0 +1,94 @@
+{
+  "approvals_recorded": [],
+  "raw_evidence": {
+    "divergent_nodes": [],
+    "evidence_bundle_sha256": "81568b8cda17b8c6f97ff900589475aa360e9dd6d0b5ffa86b3a511990d7130d",
+    "model_id": "oss-20b",
+    "node_metrics": [
+      {
+        "node_id": "miner-alpha-01",
+        "poi_cosine_similarity": 0.85,
+        "poi_drift_distance": 0.15,
+        "pouw_rubric_score": 1.0,
+        "sla_compliant": true,
+        "status": "VERIFIED",
+        "trust_score_after": 91.73,
+        "trust_score_before": 91.72,
+        "urn_resolved": true
+      },
+      {
+        "node_id": "miner-beta-02",
+        "poi_cosine_similarity": 0.875,
+        "poi_drift_distance": 0.125,
+        "pouw_rubric_score": 1.0,
+        "sla_compliant": true,
+        "status": "VERIFIED",
+        "trust_score_after": 92.2,
+        "trust_score_before": 91.89,
+        "urn_resolved": true
+      },
+      {
+        "node_id": "miner-delta-04",
+        "poi_cosine_similarity": 0.8049,
+        "poi_drift_distance": 0.1951,
+        "pouw_rubric_score": 1.0,
+        "sla_compliant": true,
+        "status": "VERIFIED",
+        "trust_score_after": 89.82,
+        "trust_score_before": 90.0,
+        "urn_resolved": true
+      }
+    ],
+    "poi_quorum_score": 0.8433,
+    "pouw_mean_score": 1.0,
+    "router_endpoint": "https://api.cortensor.app/v1/chat/completions",
+    "session_id": 108,
+    "since_last_run_delta": "Initial baseline audit recorded for session 108 (quorum=0.8433, divergent=none)."
+  },
+  "report": {
+    "divergent_nodes": [],
+    "evidence_bundle_sha256": "81568b8cda17b8c6f97ff900589475aa360e9dd6d0b5ffa86b3a511990d7130d",
+    "executive_summary": "Cortensor Session #108 audited via OpenMinion 0.1 SDK: verdict=HEALTHY_QUORUM, PoI quorum=0.8433, divergent_nodes=none.",
+    "model_id": "oss-20b",
+    "poi_quorum_score": 0.8433,
+    "pouw_mean_score": 1.0,
+    "remediation_status": "no_action_needed (quorum healthy)",
+    "router_endpoint": "https://api.cortensor.app/v1/chat/completions",
+    "session_id": 108,
+    "since_last_run_delta": "Initial baseline audit recorded for session 108 (quorum=0.8433, divergent=none).",
+    "subagent_forensics_summary": "All redundant miner nodes satisfied PoI cosine quorum and PoUW rubric checks; no forensics subagent required.",
+    "verdict": "HEALTHY_QUORUM"
+  },
+  "run_id": "0fb74a0c76d64de38adf78ea69b70f0f",
+  "run_index": 3,
+  "run_state": "completed",
+  "runtime_diagnostics": {
+    "canonical_turn_path": [
+      "services/runtime/ingress.run_turn_payload",
+      "services/request_orchestrator.run_turn",
+      "GatewayService.run_once",
+      "BrainBridgeService.run_turn",
+      "BrainRunner.run"
+    ],
+    "openminion_sdk_version": "0.1.13",
+    "runtime_mode": "brain",
+    "selected_provider": "cortensor"
+  },
+  "session_id": "corsentinel-session-108",
+  "stats": {
+    "cache_read_tokens": 0,
+    "duration_ms": 276,
+    "input_tokens": 560,
+    "llm_calls": 1,
+    "output_tokens": 156,
+    "tool_calls": 1,
+    "tool_errors": 0
+  },
+  "stream_event_kinds": [
+    "budget_event",
+    "tool_completed",
+    "tool_started"
+  ],
+  "stream_events_count": 3,
+  "title": "RUN 3: Session #108 \u2014 Healthy 3-Node Cortensor Portal Quorum (Zero False Positives)"
+}

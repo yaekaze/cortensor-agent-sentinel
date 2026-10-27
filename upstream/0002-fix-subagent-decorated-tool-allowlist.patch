@@ -1,0 +1,37 @@
+--- a/openminion/api/handoff.py
++++ b/openminion/api/handoff.py
+@@ -225,7 +225,7 @@ def subagent(
+     *,
+     instructions: str | None = None,
+     model: str | None = None,
+-    tools: list[str] | None = None,
++    tools: list[Any] | None = None,
+     output_type: type | None = None,
+     name: str | None = None,
+     timeout_seconds: int | None = None,
+@@ -268,6 +268,17 @@ def subagent(
+     parent_id = str(getattr(parent, "name", "") or "parent").strip() or "parent"
+     child_id = str(name or "subagent").strip() or "subagent"
+     context_id = f"subagent-{uuid4().hex[:12]}"
++    resolved_tool_names: list[str] = []
++    for item in tools or ():
++        if isinstance(item, str):
++            if item.strip():
++                resolved_tool_names.append(item.strip())
++        else:
++            tdecl = getattr(item, "tool_decl", None)
++            tname = str(getattr(tdecl, "name", "") or "").strip()
++            if tname:
++                resolved_tool_names.append(tname)
+     context = SubagentRunContext(
+         context_id=context_id,
+         parent_agent_id=parent_id,
+@@ -275,7 +286,7 @@ def subagent(
+         parent_run_id=f"agent:{parent_id}",
+         child_run_id=f"{context_id}:{child_id}",
+         trace_parent_id=f"agent:{parent_id}",
+-        tool_allowlist=tuple(tools or ()),
++        tool_allowlist=tuple(resolved_tool_names),
+         timeout_seconds=_bounded_timeout_seconds(timeout_seconds, deadline_iso),
+         memory_posture=str(memory_posture or "none"),
+         memory_grant_id=memory_grant_id,

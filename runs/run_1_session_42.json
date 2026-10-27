@@ -1,0 +1,118 @@
+{
+  "approvals_recorded": [
+    {
+      "approval_id": "call_handoff_advisor_3",
+      "approved": true,
+      "arguments": {
+        "message": "Recommend safe remediation for Cortensor session 42 divergent node miner-gamma-03."
+      },
+      "tool_name": "transfer_to_remediation_advisor"
+    },
+    {
+      "approval_id": "call_queue_remediation_4",
+      "approved": true,
+      "arguments": {
+        "action": "quarantine_miner",
+        "reason": "Forensics confirmed on miner-gamma-03: (1) quantized weight drift produced an invalid 240/10 COR split instead of 212.5/25.0/12.5 COR; (2) unsafe Solidity tx.origin authorization pattern injected; (3) off-chain S3 URN remained in blob-ref-pending-timeout state past 3190ms SLA.",
+        "session_id": 42,
+        "target_node_id": "miner-gamma-03"
+      },
+      "tool_name": "queue_miner_remediation"
+    }
+  ],
+  "raw_evidence": {
+    "divergent_nodes": [
+      "miner-gamma-03"
+    ],
+    "evidence_bundle_sha256": "c508827f8d707896e9ce774b76b11004780dd134e1f49c2e6f8756551d24a11c",
+    "model_id": "gpt-oss-20b",
+    "node_metrics": [
+      {
+        "node_id": "miner-alpha-01",
+        "poi_cosine_similarity": 0.8895,
+        "poi_drift_distance": 0.1105,
+        "pouw_rubric_score": 1.0,
+        "sla_compliant": true,
+        "status": "VERIFIED",
+        "trust_score_after": 90.98,
+        "trust_score_before": 90.0,
+        "urn_resolved": true
+      },
+      {
+        "node_id": "miner-beta-02",
+        "poi_cosine_similarity": 0.8965,
+        "poi_drift_distance": 0.1035,
+        "pouw_rubric_score": 1.0,
+        "sla_compliant": true,
+        "status": "VERIFIED",
+        "trust_score_after": 91.08,
+        "trust_score_before": 90.0,
+        "urn_resolved": true
+      },
+      {
+        "node_id": "miner-gamma-03",
+        "poi_cosine_similarity": 0.4941,
+        "poi_drift_distance": 0.5059,
+        "pouw_rubric_score": 0.3,
+        "sla_compliant": false,
+        "status": "BYZANTINE_FAULT",
+        "trust_score_after": 55.15,
+        "trust_score_before": 90.0,
+        "urn_resolved": false
+      }
+    ],
+    "poi_quorum_score": 0.893,
+    "pouw_mean_score": 0.7667,
+    "router_endpoint": "http://127.0.0.1:8080/api/v2/completions",
+    "session_id": 42,
+    "since_last_run_delta": "Initial baseline audit recorded for session 42 (quorum=0.8930, divergent=['miner-gamma-03'])."
+  },
+  "report": {
+    "divergent_nodes": [
+      "miner-gamma-03"
+    ],
+    "evidence_bundle_sha256": "c508827f8d707896e9ce774b76b11004780dd134e1f49c2e6f8756551d24a11c",
+    "executive_summary": "Cortensor Session #42 audited via OpenMinion 0.1 SDK: verdict=DEGRADED_REMEDIATED, PoI quorum=0.8930, divergent_nodes=['miner-gamma-03'].",
+    "model_id": "gpt-oss-20b",
+    "poi_quorum_score": 0.893,
+    "pouw_mean_score": 0.7667,
+    "remediation_status": "approved_by_operator (proposal=prop-42-d12f89da, executed=True)",
+    "router_endpoint": "http://127.0.0.1:8080/api/v2/completions",
+    "session_id": 42,
+    "since_last_run_delta": "Initial baseline audit recorded for session 42 (quorum=0.8930, divergent=['miner-gamma-03']).",
+    "subagent_forensics_summary": "Forensics confirmed on miner-gamma-03: (1) quantized weight drift produced an invalid 240/10 COR split instead of 212.5/25.0/12.5 COR; (2) unsafe Solidity tx.origin authorization pattern injected; (3) off-chain S3 URN remained in blob-ref-pending-timeout state past 3190ms SLA.",
+    "verdict": "DEGRADED_REMEDIATED"
+  },
+  "run_id": "4742502b74de44e68b783bf53a6ca891",
+  "run_index": 1,
+  "run_state": "completed",
+  "runtime_diagnostics": {
+    "canonical_turn_path": [
+      "services/runtime/ingress.run_turn_payload",
+      "services/request_orchestrator.run_turn",
+      "GatewayService.run_once",
+      "BrainBridgeService.run_turn",
+      "BrainRunner.run"
+    ],
+    "openminion_sdk_version": "0.1.13",
+    "runtime_mode": "brain",
+    "selected_provider": "cortensor"
+  },
+  "session_id": "corsentinel-session-42",
+  "stats": {
+    "cache_read_tokens": 0,
+    "duration_ms": 940,
+    "input_tokens": 980,
+    "llm_calls": 1,
+    "output_tokens": 240,
+    "tool_calls": 4,
+    "tool_errors": 0
+  },
+  "stream_event_kinds": [
+    "budget_event",
+    "tool_completed",
+    "tool_started"
+  ],
+  "stream_events_count": 9,
+  "title": "RUN 1: Session #42 \u2014 Byzantine Drift Detection, Subagent Forensics & Operator-Approved Quarantine"
+}

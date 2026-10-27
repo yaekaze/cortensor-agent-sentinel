@@ -1,0 +1,114 @@
+{
+  "approvals_recorded": [
+    {
+      "approval_id": "call_handoff_advisor_3",
+      "approved": true,
+      "arguments": {
+        "message": "Recommend safe remediation for Cortensor session 42 divergent node miner-gamma-03."
+      },
+      "tool_name": "transfer_to_remediation_advisor"
+    },
+    {
+      "approval_id": "call_queue_remediation_4",
+      "approved": false,
+      "arguments": {
+        "action": "quarantine_miner",
+        "reason": "Forensics confirmed on miner-gamma-03: (1) quantized weight drift produced an invalid 240/10 COR split instead of 212.5/25.0/12.5 COR; (2) unsafe Solidity tx.origin authorization pattern injected; (3) off-chain S3 URN remained in blob-ref-pending-timeout state past 3190ms SLA.",
+        "session_id": 42,
+        "target_node_id": "miner-gamma-03"
+      },
+      "tool_name": "queue_miner_remediation"
+    }
+  ],
+  "raw_evidence": {
+    "divergent_nodes": [
+      "miner-gamma-03"
+    ],
+    "evidence_bundle_sha256": "5115dd51b47116adb3a77aa0f05d3841628da291e4e73ffe654caf888c11bbb8",
+    "model_id": "gpt-oss-20b",
+    "node_metrics": [
+      {
+        "node_id": "miner-alpha-01",
+        "poi_cosine_similarity": 0.8895,
+        "poi_drift_distance": 0.1105,
+        "pouw_rubric_score": 1.0,
+        "sla_compliant": true,
+        "status": "VERIFIED",
+        "trust_score_after": 91.72,
+        "trust_score_before": 90.98,
+        "urn_resolved": true
+      },
+      {
+        "node_id": "miner-beta-02",
+        "poi_cosine_similarity": 0.8965,
+        "poi_drift_distance": 0.1035,
+        "pouw_rubric_score": 1.0,
+        "sla_compliant": true,
+        "status": "VERIFIED",
+        "trust_score_after": 91.89,
+        "trust_score_before": 91.08,
+        "urn_resolved": true
+      },
+      {
+        "node_id": "miner-gamma-03",
+        "poi_cosine_similarity": 0.4941,
+        "poi_drift_distance": 0.5059,
+        "pouw_rubric_score": 0.3,
+        "sla_compliant": false,
+        "status": "BYZANTINE_FAULT",
+        "trust_score_after": 35.98,
+        "trust_score_before": 55.15,
+        "urn_resolved": false
+      }
+    ],
+    "poi_quorum_score": 0.893,
+    "pouw_mean_score": 0.7667,
+    "router_endpoint": "http://127.0.0.1:8080/api/v2/completions",
+    "session_id": 42,
+    "since_last_run_delta": "Run #2 on session 42 vs Run #1: PoI quorum delta +0.0000 (0.8930 -> 0.8930); newly flagged=none, resolved=none."
+  },
+  "report": {
+    "divergent_nodes": [
+      "miner-gamma-03"
+    ],
+    "evidence_bundle_sha256": "5115dd51b47116adb3a77aa0f05d3841628da291e4e73ffe654caf888c11bbb8",
+    "executive_summary": "Cortensor Session #42 audited: divergent node ['miner-gamma-03'] detected, but operator denied quarantine in approval_callback (executed=False).",
+    "model_id": "gpt-oss-20b",
+    "poi_quorum_score": 0.893,
+    "pouw_mean_score": 0.7667,
+    "remediation_status": "rejected_by_operator (proposal=prop-42-5aa4b737, executed=False, runtime_note='openminion: Confirmation denied. The action was not run.')",
+    "router_endpoint": "http://127.0.0.1:8080/api/v2/completions",
+    "session_id": 42,
+    "since_last_run_delta": "Run #2 on session 42 vs Run #1: PoI quorum delta +0.0000 (0.8930 -> 0.8930); newly flagged=none, resolved=none.",
+    "subagent_forensics_summary": "Forensics confirmed on miner-gamma-03: (1) quantized weight drift produced an invalid 240/10 COR split instead of 212.5/25.0/12.5 COR; (2) unsafe Solidity tx.origin authorization pattern injected; (3) off-chain S3 URN remained in blob-ref-pending-timeout state past 3190ms SLA.",
+    "verdict": "CRITICAL_QUARANTINE_PENDING"
+  },
+  "run_id": "denied-fe583c2a05bf4c93",
+  "run_index": 2,
+  "run_state": "completed_approval_denied",
+  "runtime_diagnostics": {
+    "canonical_turn_path": [
+      "services/runtime/ingress.run_turn_payload",
+      "services/request_orchestrator.run_turn",
+      "GatewayService.run_once",
+      "BrainBridgeService.run_turn",
+      "BrainRunner.run"
+    ],
+    "openminion_sdk_version": "0.1.13",
+    "runtime_mode": "brain",
+    "selected_provider": "cortensor"
+  },
+  "session_id": "corsentinel-session-42",
+  "stats": {
+    "approval_denied": true,
+    "tool_calls": 4,
+    "tool_errors": 0
+  },
+  "stream_event_kinds": [
+    "budget_event",
+    "tool_completed",
+    "tool_started"
+  ],
+  "stream_events_count": 7,
+  "title": "RUN 2: Session #42 \u2014 Cross-Session Continuity ('Since Last Run' Delta) & Operator-Rejected Override"
+}

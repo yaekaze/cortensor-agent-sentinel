@@ -1,0 +1,59 @@
+================================================================================
+ RUN 1: Session #42 — Byzantine Drift Detection, Subagent Forensics & Operator-Approved Quarantine
+================================================================================
+  OpenMinion Run ID      : 4742502b74de44e68b783bf53a6ca891 (state=completed)
+  OpenMinion Session ID  : corsentinel-session-42
+  Cortensor Session ID   : #42 (http://127.0.0.1:8080/api/v2/completions)
+  Model                  : gpt-oss-20b
+  Verdict                : DEGRADED_REMEDIATED
+  PoI Quorum Similarity  : 0.8930
+  PoUW Mean Rubric Score : 0.7667
+  Divergent Miner Nodes  : miner-gamma-03
+  Subagent Forensics     : Forensics confirmed on miner-gamma-03: (1) quantized weight drift produced an invalid 240/10 COR split instead of 212.5/25.0/12.5 COR; (2) unsafe Solidity tx.origin authorization pattern injected; (3) off-chain S3 URN remained in blob-ref-pending-timeout state past 3190ms SLA.
+  Remediation Status     : approved_by_operator (proposal=prop-42-d12f89da, executed=True)
+  Since Last Run Delta   : Initial baseline audit recorded for session 42 (quorum=0.8930, divergent=['miner-gamma-03']).
+  Evidence Bundle SHA256 : c508827f8d707896e9ce774b76b11004780dd134e1f49c2e6f8756551d24a11c
+  SDK Stats              : {"cache_read_tokens": 0, "duration_ms": 940, "input_tokens": 980, "llm_calls": 1, "output_tokens": 240, "tool_calls": 4, "tool_errors": 0}
+  Approvals Recorded     : 2 (transfer_to_remediation_advisor=APPROVED, queue_miner_remediation=APPROVED)
+  Stream Events Captured : 9 events (kinds=['budget_event', 'tool_completed', 'tool_started'])
+================================================================================
+
+================================================================================
+ RUN 2: Session #42 — Cross-Session Continuity ('Since Last Run' Delta) & Operator-Rejected Override
+================================================================================
+  OpenMinion Run ID      : denied-fe583c2a05bf4c93 (state=completed_approval_denied)
+  OpenMinion Session ID  : corsentinel-session-42
+  Cortensor Session ID   : #42 (http://127.0.0.1:8080/api/v2/completions)
+  Model                  : gpt-oss-20b
+  Verdict                : CRITICAL_QUARANTINE_PENDING
+  PoI Quorum Similarity  : 0.8930
+  PoUW Mean Rubric Score : 0.7667
+  Divergent Miner Nodes  : miner-gamma-03
+  Subagent Forensics     : Forensics confirmed on miner-gamma-03: (1) quantized weight drift produced an invalid 240/10 COR split instead of 212.5/25.0/12.5 COR; (2) unsafe Solidity tx.origin authorization pattern injected; (3) off-chain S3 URN remained in blob-ref-pending-timeout state past 3190ms SLA.
+  Remediation Status     : rejected_by_operator (proposal=prop-42-5aa4b737, executed=False, runtime_note='openminion: Confirmation denied. The action was not run.')
+  Since Last Run Delta   : Run #2 on session 42 vs Run #1: PoI quorum delta +0.0000 (0.8930 -> 0.8930); newly flagged=none, resolved=none.
+  Evidence Bundle SHA256 : 5115dd51b47116adb3a77aa0f05d3841628da291e4e73ffe654caf888c11bbb8
+  SDK Stats              : {"approval_denied": true, "tool_calls": 4, "tool_errors": 0}
+  Approvals Recorded     : 2 (transfer_to_remediation_advisor=APPROVED, queue_miner_remediation=REJECTED)
+  Stream Events Captured : 7 events (kinds=['budget_event', 'tool_completed', 'tool_started'])
+================================================================================
+
+================================================================================
+ RUN 3: Session #108 — Healthy 3-Node Cortensor Portal Quorum (Zero False Positives)
+================================================================================
+  OpenMinion Run ID      : 0fb74a0c76d64de38adf78ea69b70f0f (state=completed)
+  OpenMinion Session ID  : corsentinel-session-108
+  Cortensor Session ID   : #108 (https://api.cortensor.app/v1/chat/completions)
+  Model                  : oss-20b
+  Verdict                : HEALTHY_QUORUM
+  PoI Quorum Similarity  : 0.8433
+  PoUW Mean Rubric Score : 1.0000
+  Divergent Miner Nodes  : None (All Verified)
+  Subagent Forensics     : All redundant miner nodes satisfied PoI cosine quorum and PoUW rubric checks; no forensics subagent required.
+  Remediation Status     : no_action_needed (quorum healthy)
+  Since Last Run Delta   : Initial baseline audit recorded for session 108 (quorum=0.8433, divergent=none).
+  Evidence Bundle SHA256 : 81568b8cda17b8c6f97ff900589475aa360e9dd6d0b5ffa86b3a511990d7130d
+  SDK Stats              : {"cache_read_tokens": 0, "duration_ms": 276, "input_tokens": 560, "llm_calls": 1, "output_tokens": 156, "tool_calls": 1, "tool_errors": 0}
+  Approvals Recorded     : 0 (none)
+  Stream Events Captured : 3 events (kinds=['budget_event', 'tool_completed', 'tool_started'])
+================================================================================

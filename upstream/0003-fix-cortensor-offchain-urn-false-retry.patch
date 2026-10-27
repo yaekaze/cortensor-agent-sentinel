@@ -1,0 +1,25 @@
+--- a/openminion/modules/llm/providers/cortensor/adapter.py
++++ b/openminion/modules/llm/providers/cortensor/adapter.py
+@@ -791,17 +791,20 @@ class CortensorProvider:
+         if not has_urn:
+             return False
+ 
+         if not self._response_has_text_or_tool_calls(payload):
+             return True
+ 
++        error_text = (self._extract_error_message(payload) or "").lower()
++        if not error_text:
++            return False
++
+         pending_tokens = (
+             "no content",
+             "not found",
+             "does not exist",
+             "missing object",
+-            "s3",
+             "off-chain result unavailable",
+             "offchain result unavailable",
+             "result unavailable",
+         )
+-        return any(token in serialized for token in pending_tokens)
++        return any(token in error_text for token in pending_tokens)
